@@ -11,13 +11,14 @@ const SeeNotice = () => {
     const { noticesList, loading, error, response } = useSelector((state) => state.notice);
 
     useEffect(() => {
-        if (currentRole === "Admin") {
+        if (currentRole === "Admin" && currentUser?._id) {
             dispatch(getAllNotices(currentUser._id, "Notice"));
         }
-        else {
+        else if (currentUser?.school?._id) {
             dispatch(getAllNotices(currentUser.school._id, "Notice"));
         }
-    }, [dispatch, currentRole, currentUser._id, currentUser.school._id]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch]);
 
     if (error) {
         console.log(error);
