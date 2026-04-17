@@ -37,16 +37,16 @@ import AddClass from './classRelated/AddClass';
 import ClassDetails from './classRelated/ClassDetails';
 import ShowClasses from './classRelated/ShowClasses';
 import AccountMenu from '../../components/AccountMenu';
-import '../../styles/designSystem.css';
+import '../../styles/lightTheme.css';
 
 const AdminDashboard = () => {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const toggleDrawer = () => {
         setOpen(!open);
     };
 
     return (
-        <Box sx={{ display: 'flex', minHeight: '100vh', background: 'var(--void)' }}>
+        <Box className="dashboard-container">
             {/* App Bar */}
             <Box
                 component="header"
@@ -55,32 +55,33 @@ const AdminDashboard = () => {
                     top: 0,
                     left: 0,
                     right: 0,
-                    height: '64px',
-                    background: 'linear-gradient(90deg, var(--s1) 0%, var(--s2) 100%)',
-                    borderBottom: '1px solid var(--b1)',
+                    height: '70px',
+                    background: 'white',
+                    borderBottom: '1px solid #e2e8f0',
                     display: 'flex',
                     alignItems: 'center',
                     padding: '0 24px',
                     zIndex: 1200,
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                 }}
             >
                 <IconButton
                     onClick={toggleDrawer}
                     sx={{
-                        color: 'var(--t1)',
+                        color: '#475569',
                         marginRight: '16px',
-                        '&:hover': { background: 'rgba(255,255,255,0.1)' }
+                        '&:hover': { background: '#f1f5f9' }
                     }}
                 >
-                    <MenuIcon />
+                    {open ? <ChevronLeftIcon /> : <MenuIcon />}
                 </IconButton>
                 <Typography
                     variant="h6"
                     sx={{
                         flexGrow: 1,
-                        color: 'var(--t1)',
-                        fontFamily: "'Playfair Display', serif",
-                        fontWeight: 600
+                        color: '#1e293b',
+                        fontWeight: 700,
+                        fontSize: '1.25rem'
                     }}
                 >
                     Admin Dashboard
@@ -94,30 +95,16 @@ const AdminDashboard = () => {
                 sx={{
                     position: 'fixed',
                     left: 0,
-                    top: '64px',
+                    top: '70px',
                     bottom: 0,
                     width: open ? '260px' : '0px',
-                    background: 'var(--s1)',
-                    borderRight: '1px solid var(--b1)',
+                    background: 'white',
+                    borderRight: '1px solid #e2e8f0',
                     transition: 'width 0.3s ease',
                     overflow: 'hidden',
                     zIndex: 1100,
                 }}
             >
-                <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    padding: '12px 16px',
-                    borderBottom: '1px solid var(--b1)'
-                }}>
-                    <IconButton
-                        onClick={toggleDrawer}
-                        sx={{ color: 'var(--t2)' }}
-                    >
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </Box>
                 <List component="nav" sx={{ padding: '16px 12px' }}>
                     <SideBar />
                 </List>
@@ -127,13 +114,13 @@ const AdminDashboard = () => {
             <Box
                 component="main"
                 sx={{
-                    flexGrow: 1,
+                    flex: 1,
                     marginLeft: open ? '260px' : '0px',
-                    marginTop: '64px',
+                    marginTop: '70px',
                     padding: '32px',
-                    minHeight: 'calc(100vh - 64px)',
+                    minHeight: 'calc(100vh - 70px)',
                     transition: 'margin-left 0.3s ease',
-                    background: 'var(--void)',
+                    background: '#f8fafc',
                 }}
             >
                 <Routes>
@@ -184,6 +171,6 @@ const AdminDashboard = () => {
             </Box>
         </Box>
     );
-}
+};
 
 export default AdminDashboard;

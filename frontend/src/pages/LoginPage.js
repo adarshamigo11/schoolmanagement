@@ -16,8 +16,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import SchoolIcon from '@mui/icons-material/School';
 import { loginUser } from '../redux/userRelated/userHandle';
 import Popup from '../components/Popup';
-import Decorations3D from '../components/Decorations3D';
-import '../styles/designSystem.css';
+import '../styles/lightTheme.css';
 
 const LoginPage = ({ role }) => {
   const dispatch = useDispatch();
@@ -121,16 +120,8 @@ const LoginPage = ({ role }) => {
   }, [status, currentRole, navigate, error, response, currentUser]);
 
   return (
-    <Box className="login-page" sx={{ 
-      minHeight: '100vh', 
-      display: 'flex',
-      position: 'relative',
-      overflow: 'hidden',
-      background: 'var(--void)'
-    }}>
-      <Decorations3D />
-      
-      {/* Left Side - Decorative */}
+    <Box className="login-container">
+      {/* Left Side - Branding */}
       <Box sx={{ 
         flex: 1, 
         display: { xs: 'none', md: 'flex' },
@@ -138,34 +129,34 @@ const LoginPage = ({ role }) => {
         justifyContent: 'center',
         alignItems: 'center',
         padding: '48px',
-        position: 'relative',
-        zIndex: 1
+        background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%)'
       }}>
         <Box sx={{
-          width: '120px',
-          height: '120px',
-          borderRadius: '24px',
-          background: 'var(--gradient-primary)',
+          width: '100px',
+          height: '100px',
+          borderRadius: '20px',
+          background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           marginBottom: '32px',
-          boxShadow: 'var(--shadow-glow)'
+          boxShadow: '0 20px 40px rgba(37, 99, 235, 0.3)'
         }}>
-          <SchoolIcon sx={{ fontSize: '64px', color: 'var(--t1)' }} />
+          <SchoolIcon sx={{ fontSize: '56px', color: 'white' }} />
         </Box>
-        <Typography variant="h2" sx={{ 
-          fontFamily: "'Playfair Display', serif",
-          color: 'var(--t1)',
+        <Typography variant="h3" sx={{ 
+          fontWeight: 700,
+          color: '#1e293b',
           textAlign: 'center',
           marginBottom: '16px'
         }}>
           School Management
         </Typography>
-        <Typography variant="h5" sx={{ 
-          color: 'var(--t3)',
+        <Typography variant="h6" sx={{ 
+          color: '#475569',
           textAlign: 'center',
-          maxWidth: '400px'
+          maxWidth: '400px',
+          fontWeight: 400
         }}>
           Empowering education with modern technology for Indian schools
         </Typography>
@@ -178,42 +169,23 @@ const LoginPage = ({ role }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '24px',
-          position: 'relative',
-          zIndex: 1
+          padding: '24px'
         }}
       >
-        <Paper elevation={0} sx={{
-          width: '100%',
-          maxWidth: '420px',
-          background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid var(--b2)',
-          borderRadius: 'var(--radius-xl)',
-          padding: { xs: '32px 24px', sm: '48px' },
-          position: 'relative',
-          overflow: 'hidden'
-        }}>
-          {/* Top accent line */}
-          <Box sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '4px',
-            background: role === 'Admin' ? 'var(--gradient-gold)' : 'var(--gradient-primary)'
-          }} />
+        <Paper elevation={0} className="login-card">
+          <Box className="login-logo">
+            <SchoolIcon sx={{ fontSize: '40px' }} />
+          </Box>
 
           <Box sx={{ textAlign: 'center', marginBottom: '32px' }}>
             <Typography variant="h4" sx={{ 
-              fontFamily: "'Playfair Display', serif",
-              color: 'var(--t1)',
-              marginBottom: '8px',
-              fontWeight: 600
+              fontWeight: 700,
+              color: '#1e293b',
+              marginBottom: '8px'
             }}>
               {role} Login
             </Typography>
-            <Typography variant="body1" sx={{ color: 'var(--t3)' }}>
+            <Typography variant="body1" sx={{ color: '#64748b' }}>
               Welcome back! Please enter your details
             </Typography>
           </Box>
@@ -222,7 +194,6 @@ const LoginPage = ({ role }) => {
             {role === "Student" ? (
               <>
                 <TextField
-                  className="input-premium"
                   required
                   fullWidth
                   id="rollNumber"
@@ -235,19 +206,15 @@ const LoginPage = ({ role }) => {
                   onChange={handleInputChange}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      borderRadius: 'var(--radius-md)',
-                      color: 'var(--t1)',
-                      '& fieldset': { borderColor: 'var(--b1)' },
-                      '&:hover fieldset': { borderColor: 'var(--b2)' },
-                      '&.Mui-focused fieldset': { borderColor: 'var(--bright)' }
-                    },
-                    '& .MuiInputLabel-root': { color: 'var(--t3)' },
-                    '& .MuiFormHelperText-root': { color: 'var(--gold2)' }
+                      background: '#f8fafc',
+                      borderRadius: '10px',
+                      '& fieldset': { borderColor: '#e2e8f0', borderWidth: '2px' },
+                      '&:hover fieldset': { borderColor: '#cbd5e1' },
+                      '&.Mui-focused fieldset': { borderColor: '#3b82f6' }
+                    }
                   }}
                 />
                 <TextField
-                  className="input-premium"
                   required
                   fullWidth
                   id="studentName"
@@ -259,21 +226,17 @@ const LoginPage = ({ role }) => {
                   onChange={handleInputChange}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      borderRadius: 'var(--radius-md)',
-                      color: 'var(--t1)',
-                      '& fieldset': { borderColor: 'var(--b1)' },
-                      '&:hover fieldset': { borderColor: 'var(--b2)' },
-                      '&.Mui-focused fieldset': { borderColor: 'var(--bright)' }
-                    },
-                    '& .MuiInputLabel-root': { color: 'var(--t3)' },
-                    '& .MuiFormHelperText-root': { color: 'var(--gold2)' }
+                      background: '#f8fafc',
+                      borderRadius: '10px',
+                      '& fieldset': { borderColor: '#e2e8f0', borderWidth: '2px' },
+                      '&:hover fieldset': { borderColor: '#cbd5e1' },
+                      '&.Mui-focused fieldset': { borderColor: '#3b82f6' }
+                    }
                   }}
                 />
               </>
             ) : (
               <TextField
-                className="input-premium"
                 required
                 fullWidth
                 id="email"
@@ -285,21 +248,17 @@ const LoginPage = ({ role }) => {
                 onChange={handleInputChange}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    borderRadius: 'var(--radius-md)',
-                    color: 'var(--t1)',
-                    '& fieldset': { borderColor: 'var(--b1)' },
-                    '&:hover fieldset': { borderColor: 'var(--b2)' },
-                    '&.Mui-focused fieldset': { borderColor: 'var(--bright)' }
-                  },
-                  '& .MuiInputLabel-root': { color: 'var(--t3)' },
-                  '& .MuiFormHelperText-root': { color: 'var(--gold2)' }
+                    background: '#f8fafc',
+                    borderRadius: '10px',
+                    '& fieldset': { borderColor: '#e2e8f0', borderWidth: '2px' },
+                    '&:hover fieldset': { borderColor: '#cbd5e1' },
+                    '&.Mui-focused fieldset': { borderColor: '#3b82f6' }
+                  }
                 }}
               />
             )}
             
             <TextField
-              className="input-premium"
               required
               fullWidth
               name="password"
@@ -315,7 +274,7 @@ const LoginPage = ({ role }) => {
                   <InputAdornment position="end">
                     <IconButton 
                       onClick={() => setToggle(!toggle)}
-                      sx={{ color: 'var(--t3)' }}
+                      sx={{ color: '#64748b' }}
                     >
                       {toggle ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
@@ -324,31 +283,32 @@ const LoginPage = ({ role }) => {
               }}
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--t1)',
-                  '& fieldset': { borderColor: 'var(--b1)' },
-                  '&:hover fieldset': { borderColor: 'var(--b2)' },
-                  '&.Mui-focused fieldset': { borderColor: 'var(--bright)' }
-                },
-                '& .MuiInputLabel-root': { color: 'var(--t3)' },
-                '& .MuiFormHelperText-root': { color: 'var(--gold2)' }
+                  background: '#f8fafc',
+                  borderRadius: '10px',
+                  '& fieldset': { borderColor: '#e2e8f0', borderWidth: '2px' },
+                  '&:hover fieldset': { borderColor: '#cbd5e1' },
+                  '&.Mui-focused fieldset': { borderColor: '#3b82f6' }
+                }
               }}
             />
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Link to="#" style={{ color: 'var(--sky)', textDecoration: 'none', fontSize: '0.9rem' }}>
+              <Link to="#" style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>
                 Forgot password?
               </Link>
             </Box>
 
             <button
               type="submit"
-              className="btn-premium"
-              style={{ marginTop: '8px' }}
+              className="btn-primary"
+              style={{ 
+                marginTop: '8px',
+                width: '100%',
+                justifyContent: 'center'
+              }}
             >
               {loader ? (
-                <CircularProgress size={24} sx={{ color: 'var(--t1)' }} />
+                <CircularProgress size={24} sx={{ color: 'white' }} />
               ) : (
                 "Sign In"
               )}
@@ -358,9 +318,10 @@ const LoginPage = ({ role }) => {
               type="button"
               onClick={guestModeHandler}
               className="btn-outline"
+              style={{ width: '100%' }}
             >
               {guestLoader ? (
-                <CircularProgress size={20} sx={{ color: 'var(--t1)' }} />
+                <CircularProgress size={20} sx={{ color: '#3b82f6' }} />
               ) : (
                 "Login as Guest"
               )}
@@ -368,9 +329,9 @@ const LoginPage = ({ role }) => {
 
             {role === "Admin" && (
               <Box sx={{ textAlign: 'center', marginTop: '16px' }}>
-                <Typography variant="body2" sx={{ color: 'var(--t3)' }}>
+                <Typography variant="body2" sx={{ color: '#64748b' }}>
                   Don't have an account?{' '}
-                  <Link to="/Adminregister" style={{ color: 'var(--sky)', textDecoration: 'none', fontWeight: 600 }}>
+                  <Link to="/Adminregister" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 600 }}>
                     Sign up
                   </Link>
                 </Typography>
@@ -384,14 +345,13 @@ const LoginPage = ({ role }) => {
         sx={{ 
           color: '#fff', 
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          background: 'rgba(11, 15, 26, 0.9)',
-          backdropFilter: 'blur(10px)'
+          background: 'rgba(30, 41, 59, 0.8)'
         }}
         open={guestLoader}
       >
         <Box sx={{ textAlign: 'center' }}>
-          <CircularProgress sx={{ color: 'var(--bright)', marginBottom: '16px' }} />
-          <Typography sx={{ color: 'var(--t1)' }}>Please Wait...</Typography>
+          <CircularProgress sx={{ color: '#3b82f6', marginBottom: '16px' }} />
+          <Typography sx={{ color: 'white' }}>Please Wait...</Typography>
         </Box>
       </Backdrop>
       
