@@ -21,6 +21,7 @@ import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import Popup from '../../../components/Popup';
 
 const ViewStudent = () => {
+    // eslint-disable-next-line no-unused-vars
     const [showTab] = useState(false);
 
     const navigate = useNavigate()
@@ -90,6 +91,7 @@ const ViewStudent = () => {
         }
     }, [userDetails]);
 
+    // eslint-disable-next-line no-unused-vars
     const submitHandler = (event) => {
         event.preventDefault()
         dispatch(updateUser(fields, studentID, address))
