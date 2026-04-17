@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
 import { getClassDetails, getClassStudents, getSubjectList } from "../../../redux/sclassRelated/sclassHandle";
-import { deleteUser } from '../../../redux/userRelated/userHandle';
+
 import {
     Box, Container, Typography, Tab, IconButton
 } from '@mui/material';
