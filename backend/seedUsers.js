@@ -15,6 +15,7 @@ const seedData = async () => {
         console.log("Connected to MongoDB");
 
         // Clear existing data (optional - remove if you want to keep existing data)
+        await Admin.deleteOne({ email: "admin231" });
         await Admin.deleteOne({ email: "yogendra@12" });
         await Student.deleteOne({ rollNum: "1" });
         await Teacher.deleteOne({ email: "tony@12" });
@@ -23,14 +24,14 @@ const seedData = async () => {
 
         // Create Admin
         const admin = new Admin({
-            name: "Yogendra Admin",
-            email: "yogendra@12",
-            password: "zxc",
+            name: "Admin",
+            email: "admin231",
+            password: "123",
             role: "Admin",
             schoolName: "Demo School"
         });
         await admin.save();
-        console.log("✅ Admin created: yogendra@12 / zxc");
+        console.log("✅ Admin created: admin231 / 123");
 
         // Create Class first (needed for student)
         const sclass = new Sclass({
@@ -67,7 +68,7 @@ const seedData = async () => {
 
         console.log("\n🎉 All demo users created successfully!");
         console.log("\n--- Login Credentials ---");
-        console.log("Admin:    yogendra@12 / zxc");
+        console.log("Admin:    admin231 / 123");
         console.log("Student:  Roll: 1, Name: Dipesh Awasthi / zxc");
         console.log("Teacher:  tony@12 / zxc");
 
