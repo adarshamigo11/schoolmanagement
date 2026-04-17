@@ -26,12 +26,10 @@ mongoose
 
 app.use('/', Routes);
 
-// Export for Vercel serverless
-module.exports = app;
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server started at port no. ${PORT}`)
+})
 
-// Only listen if not running on Vercel
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, () => {
-        console.log(`Server started at port no. ${PORT}`)
-    })
-}
+// Export for Vercel serverless (optional)
+module.exports = app;
