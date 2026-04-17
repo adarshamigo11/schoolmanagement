@@ -59,12 +59,6 @@ const userSlice = createSlice({
             state.error = null;
             state.response = null;
         },
-        getDeleteSuccess: (state) => {
-            state.loading = false;
-            state.error = null;
-            state.response = null;
-        },
-
         getRequest: (state) => {
             state.loading = true;
         },
@@ -92,7 +86,7 @@ export const {
     authError,
     authLogout,
     doneSuccess,
-    getDeleteSuccess,
+
     getRequest,
     getFailed,
     getError,
