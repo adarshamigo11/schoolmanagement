@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import AdminRegisterPage from './pages/admin/AdminRegisterPage';
 import ChooseUser from './pages/ChooseUser';
 
+// App component - School Management System
 const App = () => {
   const { currentRole } = useSelector(state => state.user);
 
