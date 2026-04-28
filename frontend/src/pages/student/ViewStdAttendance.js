@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
-import { BottomNavigation, BottomNavigationAction, Box, Button, Collapse, Paper, Table, TableBody, TableHead, Typography } from '@mui/material';
+import { BottomNavigation, BottomNavigationAction, Box, Button, Collapse, Paper, Table, TableBody, TableHead, Typography, TableContainer, useMediaQuery, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails } from '../../redux/userRelated/userHandle';
 import { calculateOverallAttendancePercentage, calculateSubjectAttendancePercentage, groupAttendanceBySubject } from '../../components/attendanceCalculator';
@@ -15,6 +15,8 @@ import { StyledTableCell, StyledTableRow } from '../../components/styles';
 
 const ViewStdAttendance = () => {
     const dispatch = useDispatch();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [openStates, setOpenStates] = useState({});
 
@@ -31,7 +33,9 @@ const ViewStdAttendance = () => {
         dispatch(getUserDetails(currentUser._id, "Student"));
     }, [dispatch, currentUser._id]);
 
+    // eslint-disable-next-line no-unused-vars
     if (response) { console.log(response) }
+    // eslint-disable-next-line no-unused-vars
     else if (error) { console.log(error) }
 
     const [subjectAttendance, setSubjectAttendance] = useState([]);
@@ -64,77 +68,88 @@ const ViewStdAttendance = () => {
     const renderTableSection = () => {
         return (
             <>
-                <Typography variant="h4" align="center" gutterBottom>
+                <Typography variant={isMobile ? "h6" : "h4"} align="center" gutterBottom>
                     Attendance
                 </Typography>
-                <Table>
-                    <TableHead>
-                        <StyledTableRow>
-                            <StyledTableCell>Subject</StyledTableCell>
-                            <StyledTableCell>Present</StyledTableCell>
-                            <StyledTableCell>Total Sessions</StyledTableCell>
-                            <StyledTableCell>Attendance Percentage</StyledTableCell>
-                            <StyledTableCell align="center">Actions</StyledTableCell>
-                        </StyledTableRow>
-                    </TableHead>
-                    {Object.entries(attendanceBySubject).map(([subName, { present, allData, subId, sessions }], index) => {
-                        const subjectAttendancePercentage = calculateSubjectAttendancePercentage(present, sessions);
+                <TableContainer component={Paper} sx={{ overflowX: 'auto', mb: 2 }}>
+                    <Table size={isMobile ? "small" : "medium"}>
+                        <TableHead>
+                            <StyledTableRow>
+                                <StyledTableCell>Subject</StyledTableCell>
+                                <StyledTableCell>Present</StyledTableCell>
+                                <StyledTableCell>Sessions</StyledTableCell>
+                                {!isMobile && <StyledTableCell>%</StyledTableCell>}
+                                <StyledTableCell align="center">Details</StyledTableCell>
+                            </StyledTableRow>
+                        </TableHead>
+                        {Object.entries(attendanceBySubject).map(([subName, { present, allData, subId, sessions }], index) => {
+                            const subjectAttendancePercentage = calculateSubjectAttendancePercentage(present, sessions);
 
-                        return (
-                            <TableBody key={index}>
-                                <StyledTableRow>
-                                    <StyledTableCell>{subName}</StyledTableCell>
-                                    <StyledTableCell>{present}</StyledTableCell>
-                                    <StyledTableCell>{sessions}</StyledTableCell>
-                                    <StyledTableCell>{subjectAttendancePercentage}%</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        <Button variant="contained"
-                                            onClick={() => handleOpen(subId)}>
-                                            {openStates[subId] ? <KeyboardArrowUp /> : <KeyboardArrowDown />}Details
-                                        </Button>
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                                        <Collapse in={openStates[subId]} timeout="auto" unmountOnExit>
-                                            <Box sx={{ margin: 1 }}>
-                                                <Typography variant="h6" gutterBottom component="div">
-                                                    Attendance Details
-                                                </Typography>
-                                                <Table size="small" aria-label="purchases">
-                                                    <TableHead>
-                                                        <StyledTableRow>
-                                                            <StyledTableCell>Date</StyledTableCell>
-                                                            <StyledTableCell align="right">Status</StyledTableCell>
-                                                        </StyledTableRow>
-                                                    </TableHead>
-                                                    <TableBody>
-                                                        {allData.map((data, index) => {
-                                                            const date = new Date(data.date);
-                                                            const dateString = date.toString() !== "Invalid Date" ? date.toISOString().substring(0, 10) : "Invalid Date";
-                                                            return (
-                                                                <StyledTableRow key={index}>
-                                                                    <StyledTableCell component="th" scope="row">
-                                                                        {dateString}
-                                                                    </StyledTableCell>
-                                                                    <StyledTableCell align="right">{data.status}</StyledTableCell>
-                                                                </StyledTableRow>
-                                                            )
-                                                        })}
-                                                    </TableBody>
-                                                </Table>
-                                            </Box>
-                                        </Collapse>
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            </TableBody>
-                        )
-                    }
-                    )}
-                </Table>
-                <div>
-                    Overall Attendance Percentage: {overallAttendancePercentage.toFixed(2)}%
-                </div>
+                            return (
+                                <TableBody key={index}>
+                                    <StyledTableRow>
+                                        <StyledTableCell>{subName}</StyledTableCell>
+                                        <StyledTableCell>{present}</StyledTableCell>
+                                        <StyledTableCell>{sessions}</StyledTableCell>
+                                        {!isMobile && <StyledTableCell>{subjectAttendancePercentage}%</StyledTableCell>}
+                                        <StyledTableCell align="center">
+                                            <Button 
+                                                variant="contained"
+                                                size={isMobile ? "small" : "medium"}
+                                                onClick={() => handleOpen(subId)}
+                                                sx={{ 
+                                                    minWidth: isMobile ? 'auto' : undefined,
+                                                    padding: isMobile ? '4px 8px' : undefined,
+                                                    fontSize: isMobile ? '0.75rem' : undefined
+                                                }}
+                                            >
+                                                {openStates[subId] ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                                                {!isMobile && "Details"}
+                                            </Button>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={isMobile ? 4 : 5}>
+                                            <Collapse in={openStates[subId]} timeout="auto" unmountOnExit>
+                                                <Box sx={{ margin: 1 }}>
+                                                    <Typography variant="h6" gutterBottom component="div" sx={{ fontSize: isMobile ? '0.9rem' : undefined }}>
+                                                        Attendance Details
+                                                    </Typography>
+                                                    <Table size="small" aria-label="attendance-details">
+                                                        <TableHead>
+                                                            <StyledTableRow>
+                                                                <StyledTableCell>Date</StyledTableCell>
+                                                                <StyledTableCell align="right">Status</StyledTableCell>
+                                                            </StyledTableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {allData.map((data, index) => {
+                                                                const date = new Date(data.date);
+                                                                const dateString = date.toString() !== "Invalid Date" ? date.toISOString().substring(0, 10) : "Invalid Date";
+                                                                return (
+                                                                    <StyledTableRow key={index}>
+                                                                        <StyledTableCell component="th" scope="row">
+                                                                            {dateString}
+                                                                        </StyledTableCell>
+                                                                        <StyledTableCell align="right">{data.status}</StyledTableCell>
+                                                                    </StyledTableRow>
+                                                                )
+                                                            })}
+                                                        </TableBody>
+                                                    </Table>
+                                                </Box>
+                                            </Collapse>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                </TableBody>
+                            )
+                        }
+                        )}
+                    </Table>
+                </TableContainer>
+                <Typography variant="body1" sx={{ mb: isMobile ? 8 : 2, fontWeight: 600, textAlign: 'center' }}>
+                    Overall Attendance: {overallAttendancePercentage.toFixed(2)}%
+                </Typography>
             </>
         )
     }
@@ -160,7 +175,13 @@ const ViewStdAttendance = () => {
                             {selectedSection === 'table' && renderTableSection()}
                             {selectedSection === 'chart' && renderChartSection()}
 
-                            <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+                            <Paper sx={{ 
+                                position: 'fixed', 
+                                bottom: 0, 
+                                left: 0, 
+                                right: 0, 
+                                zIndex: 900 
+                            }} elevation={3}>
                                 <BottomNavigation value={selectedSection} onChange={handleSectionChange} showLabels>
                                     <BottomNavigationAction
                                         label="Table"
