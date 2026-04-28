@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 
 const Admin = require("./models/adminSchema.js");
@@ -23,10 +24,13 @@ const seedData = async () => {
         console.log("Cleared all existing data");
 
         // ==================== ADMIN ====================
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash("123", salt);
+
         const admin = new Admin({
             name: "Admin",
             email: "admin231",
-            password: "123",
+            password: hashedPassword,
             role: "Admin",
             schoolName: "Delhi Public School"
         });
@@ -79,8 +83,11 @@ const seedData = async () => {
 
         const teachers = [];
         for (let i = 0; i < teacherData.length; i++) {
+            const teacherSalt = await bcrypt.genSalt(10);
+            const teacherHashedPass = await bcrypt.hash(teacherData[i].password, teacherSalt);
             const teacher = new Teacher({
                 ...teacherData[i],
+                password: teacherHashedPass,
                 school: admin._id,
                 role: "Teacher",
                 teachSclass: classes[i]._id,
@@ -117,10 +124,12 @@ const seedData = async () => {
             const studentNames = studentNamesByClass[classIdx];
             for (let j = 0; j < studentNames.length; j++) {
                 const rollNum = classIdx * 5 + j + 1;
+                const studentSalt = await bcrypt.genSalt(10);
+                const studentHashedPass = await bcrypt.hash("123", studentSalt);
                 const student = new Student({
                     name: studentNames[j],
                     rollNum: rollNum,
-                    password: "123",
+                    password: studentHashedPass,
                     sclassName: classes[classIdx]._id,
                     school: admin._id,
                     role: "Student",
