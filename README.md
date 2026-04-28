@@ -7,14 +7,13 @@ Streamline school management, class organization, and add students and faculty.<
 Seamlessly track attendance, assess performance, and provide feedback. <br>
 Access records, view marks, and communicate effortlessly.
 </h3>
-
+<h2>
+    See the full website here
+</h2>
 <p>
-  <a href="https://youtu.be/ol650KwQkgY?si=rKcboqSv3n-e4UbC">Youtube Video</a>
+ http://schoolmatrix.gt.tc/
 </p>
 
-<p>
-  <a href="https://www.linkedin.com/in/yogndrr/">LinkedIn</a>
-</p>
 
 
 # About
@@ -47,9 +46,7 @@ The School Management System is a web-based application built using the MERN (Mo
 
 Clone the project:
 
-```
-git clone https://github.com/Yogndrr/MERN-School-Management-System.git
-```
+
 
 There are three branches in this repository. Each serves a different purpose.
 
