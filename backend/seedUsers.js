@@ -35,13 +35,11 @@ const seedData = async () => {
         console.log("Cleared all existing data");
 
         // ==================== ADMIN ====================
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash("123", salt);
-
+        // Note: Admin login uses plain text comparison (not bcrypt)
         const admin = new Admin({
             name: "Admin",
             email: "admin231",
-            password: hashedPassword,
+            password: "123",
             role: "Admin",
             schoolName: "Delhi Public School"
         });
