@@ -492,7 +492,36 @@ p {
   }
   
   .profile-card {
-    margin: var(--space-4);
+    margin: var(--space-2);
+    max-width: 100%;
+  }
+  
+  .profile-header {
+    padding: var(--space-6) var(--space-4);
+  }
+  
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+  }
+  
+  .profile-body {
+    padding: var(--space-4);
+  }
+  
+  .profile-field {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .profile-label {
+    font-size: 0.8rem;
+  }
+  
+  .profile-value {
+    font-size: 0.9rem;
+    text-align: right;
   }
   
   .modern-card {
@@ -501,6 +530,97 @@ p {
   
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .stat-card {
+    padding: var(--space-4);
+  }
+  
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+  
+  .page-header {
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-4);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  
+  .page-title {
+    font-size: 1.25rem;
+  }
+  
+  .data-table-header,
+  .data-table-row {
+    padding: var(--space-3) var(--space-4);
+    font-size: 0.85rem;
+  }
+  
+  /* Force all MUI tables and grids to be scrollable on mobile */
+  .MuiTableContainer-root {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .MuiTable-root {
+    minWidth: 600px;
+  }
+  
+  /* Make MUI Grid items full width on mobile */
+  .MuiGrid-item {
+    max-width: 100% !important;
+    flex-basis: 100% !important;
+  }
+  
+  /* Stack cards vertically on mobile */
+  .MuiPaper-root {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Button sizing for mobile */
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Prevent horizontal overflow */
+  .dashboard-container {
+    overflow-x: hidden;
+  }
+  
+  /* Make input fields full width */
+  .input-modern {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+  
+  .profile-value {
+    text-align: left;
+  }
+  
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
   }
 }
 
