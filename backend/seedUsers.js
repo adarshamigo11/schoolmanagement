@@ -10,6 +10,17 @@ const Subject = require("./models/subjectSchema.js");
 
 dotenv.config();
 
+// Helper: random integer between min and max (inclusive)
+const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+// Helper: random date in the past N days
+const randomDate = (daysBack) => {
+    const date = new Date();
+    date.setDate(date.getDate() - randInt(1, daysBack));
+    date.setHours(0, 0, 0, 0);
+    return date;
+};
+
 const seedData = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URL);
@@ -49,83 +60,111 @@ const seedData = async () => {
             await sclass.save();
             classes.push(sclass);
         }
-        console.log(`✅ ${classes.length} Classes created: ${classNames.join(", ")}`);
+        console.log(`✅ ${classes.length} Classes created`);
 
-        // ==================== SUBJECTS ====================
-        const subjectData = [
-            { subName: "Mathematics", subCode: "MATH01", sessions: "5" },
-            { subName: "Science", subCode: "SCI01", sessions: "5" },
-            { subName: "English", subCode: "ENG01", sessions: "4" },
-            { subName: "Hindi", subCode: "HIN01", sessions: "4" },
-            { subName: "Social Studies", subCode: "SST01", sessions: "4" },
+        // ==================== SUBJECTS (5 per class) ====================
+        const baseSubjects = [
+            { subName: "Mathematics", subCode: "MATH" },
+            { subName: "Science", subCode: "SCI" },
+            { subName: "English", subCode: "ENG" },
+            { subName: "Hindi", subCode: "HIN" },
+            { subName: "Social Studies", subCode: "SST" },
         ];
 
-        const subjects = [];
-        for (let i = 0; i < subjectData.length; i++) {
-            const subject = new Subject({
-                ...subjectData[i],
-                sclassName: classes[i]._id,
-                school: admin._id
-            });
-            await subject.save();
-            subjects.push(subject);
-        }
-        console.log(`✅ ${subjects.length} Subjects created: ${subjectData.map(s => s.subName).join(", ")}`);
+        const sessionsPerSubject = { "Mathematics": "5", "Science": "5", "English": "4", "Hindi": "4", "Social Studies": "4" };
 
-        // ==================== TEACHERS ====================
+        // allSubjects[classIdx] = array of 5 subject documents for that class
+        const allSubjects = [];
+
+        for (let i = 0; i < classNames.length; i++) {
+            const classSubjects = [];
+            for (const baseSub of baseSubjects) {
+                const subject = new Subject({
+                    subName: baseSub.subName,
+                    subCode: `${baseSub.subCode}${i + 6}`, // e.g., MATH6, SCI7
+                    sessions: sessionsPerSubject[baseSub.subName],
+                    sclassName: classes[i]._id,
+                    school: admin._id
+                });
+                await subject.save();
+                classSubjects.push(subject);
+            }
+            allSubjects.push(classSubjects);
+        }
+        console.log(`✅ ${classNames.length * 5} Subjects created (5 per class)`);
+
+        // ==================== TEACHERS (5 total, 1 per class) ====================
         const teacherData = [
-            { name: "Rajesh Kumar", email: "rajesh@school.com", password: "123" },
-            { name: "Priya Sharma", email: "priya@school.com", password: "123" },
-            { name: "Anil Verma", email: "anil@school.com", password: "123" },
-            { name: "Sunita Devi", email: "sunita@school.com", password: "123" },
-            { name: "Vikram Singh", email: "vikram@school.com", password: "123" },
+            { name: "Rajesh Kumar", email: "rajesh@school.com" },
+            { name: "Priya Sharma", email: "priya@school.com" },
+            { name: "Anil Verma", email: "anil@school.com" },
+            { name: "Sunita Devi", email: "sunita@school.com" },
+            { name: "Vikram Singh", email: "vikram@school.com" },
         ];
 
         const teachers = [];
         for (let i = 0; i < teacherData.length; i++) {
             const teacherSalt = await bcrypt.genSalt(10);
-            const teacherHashedPass = await bcrypt.hash(teacherData[i].password, teacherSalt);
+            const teacherHashedPass = await bcrypt.hash("123", teacherSalt);
             const teacher = new Teacher({
-                ...teacherData[i],
+                name: teacherData[i].name,
+                email: teacherData[i].email,
                 password: teacherHashedPass,
                 school: admin._id,
                 role: "Teacher",
                 teachSclass: classes[i]._id,
-                teachSubject: subjects[i]._id
+                teachSubject: allSubjects[i][0]._id // First subject of their class
             });
             await teacher.save();
             teachers.push(teacher);
         }
 
-        // Update subjects with teacher references
-        for (let i = 0; i < subjects.length; i++) {
-            subjects[i].teacher = teachers[i]._id;
-            await subjects[i].save();
+        // Update subjects with teacher references (first subject of each class gets the teacher)
+        for (let i = 0; i < teachers.length; i++) {
+            allSubjects[i][0].teacher = teachers[i]._id;
+            await allSubjects[i][0].save();
         }
-        console.log(`✅ ${teachers.length} Teachers created: ${teacherData.map(t => t.name).join(", ")}`);
+        console.log(`✅ ${teachers.length} Teachers created`);
 
-        // ==================== STUDENTS ====================
-        // 5 students per class, each class has 1 teacher
+        // ==================== STUDENTS (5 per class) ====================
         const studentNamesByClass = [
-            // Class 6 - Mathematics (Rajesh Kumar)
             ["Aarav Patel", "Ananya Gupta", "Arjun Reddy", "Diya Sharma", "Ishaan Mehta"],
-            // Class 7 - Science (Priya Sharma)
             ["Kavya Nair", "Rohan Joshi", "Meera Iyer", "Aditya Singh", "Nisha Rao"],
-            // Class 8 - English (Anil Verma)
             ["Vivek Das", "Pooja Mukherjee", "Rahul Kulkarni", "Sneha Pillai", "Arnav Chauhan"],
-            // Class 9 - Hindi (Sunita Devi)
             ["Divya Bansal", "Kunal Thakur", "Riya Agarwal", "Sahil Negi", "Tanvi Bhatt"],
-            // Class 10 - Social Studies (Vikram Singh)
             ["Neha Saxena", "Aman Tiwari", "Prachi Dubey", "Yash Mishra", "Simran Kaur"],
         ];
 
         const allStudents = [];
         for (let classIdx = 0; classIdx < studentNamesByClass.length; classIdx++) {
             const studentNames = studentNamesByClass[classIdx];
+            const classSubjects = allSubjects[classIdx];
+
             for (let j = 0; j < studentNames.length; j++) {
                 const rollNum = classIdx * 5 + j + 1;
                 const studentSalt = await bcrypt.genSalt(10);
                 const studentHashedPass = await bcrypt.hash("123", studentSalt);
+
+                // ---- Exam Results: marks for each subject ----
+                const examResult = classSubjects.map(subject => ({
+                    subName: subject._id,
+                    marksObtained: randInt(45, 98) // Random marks out of 100
+                }));
+
+                // ---- Attendance: records for last 30 days for each subject ----
+                const attendance = [];
+                for (const subject of classSubjects) {
+                    const sessionsCount = parseInt(subject.sessions);
+                    // Add attendance records (up to sessions count)
+                    for (let s = 0; s < Math.min(sessionsCount, 4); s++) {
+                        attendance.push({
+                            date: randomDate(30),
+                            status: Math.random() > 0.15 ? "Present" : "Absent", // 85% attendance
+                            subName: subject._id
+                        });
+                    }
+                }
+
                 const student = new Student({
                     name: studentNames[j],
                     rollNum: rollNum,
@@ -133,17 +172,14 @@ const seedData = async () => {
                     sclassName: classes[classIdx]._id,
                     school: admin._id,
                     role: "Student",
-                    examResult: [{
-                        subName: subjects[classIdx]._id,
-                        marksObtained: Math.floor(Math.random() * 40) + 60 // 60-100
-                    }],
-                    attendance: []
+                    examResult,
+                    attendance
                 });
                 await student.save();
                 allStudents.push(student);
             }
         }
-        console.log(`✅ ${allStudents.length} Students created (5 per class)`);
+        console.log(`✅ ${allStudents.length} Students created with exam results and attendance`);
 
         // ==================== SUMMARY ====================
         console.log("\n🎉 All dummy data created successfully!");
@@ -152,18 +188,21 @@ const seedData = async () => {
         console.log("========================================");
         console.log("\n👤 Admin:");
         console.log("   Email: admin231 / Password: 123");
-        console.log("\n👩‍🏫 Teachers:");
+        console.log("\n👩‍🏫 Teachers (Password: 123):");
         teacherData.forEach((t, i) => {
-            console.log(`   ${t.name} — Email: ${t.email} / Password: ${t.password} — Subject: ${subjectData[i].subName} — Class: ${classNames[i]}`);
+            console.log(`   ${t.name} — ${t.email} — Subject: ${baseSubjects[0].subName} — Class: ${classNames[i]}`);
         });
-        console.log("\n🎓 Students (Password for all: 123):");
+        console.log("\n🎓 Students (Password: 123):");
         studentNamesByClass.forEach((names, classIdx) => {
-            console.log(`\n   📚 ${classNames[classIdx]} (${subjectData[classIdx].subName} - ${teacherData[classIdx].name}):`);
+            console.log(`\n   📚 ${classNames[classIdx]}:`);
             names.forEach((name, j) => {
                 const rollNum = classIdx * 5 + j + 1;
                 console.log(`      Roll ${rollNum}: ${name}`);
             });
         });
+        console.log("\n📊 Each student has:");
+        console.log("   - Exam marks (out of 100) for 5 subjects");
+        console.log("   - Attendance records (4 sessions per subject, ~85% present)");
         console.log("\n========================================");
 
         process.exit(0);
